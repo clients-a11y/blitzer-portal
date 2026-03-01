@@ -1,7 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { prisma } from './db'
-import { slugify, extractBundesland, extractAutobahn, extractOrt } from './utils'
-import type { VerstossArt, FaqItem, BussgeldEintrag } from '@/types'
+import { slugify } from './utils'
+import type { VerstossArt } from '@/types'
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,

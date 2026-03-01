@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     'Blitzer-Portal Deutschland: Informationen zu Messstellen, Geschwindigkeitskontrollen, Bußgeldern und zuständigen Behörden in allen Bundesländern.',
 }
 
-export const revalidate = 300 // 5 minutes
+export const dynamic = 'force-dynamic'
 
 async function getHomeData() {
   const [

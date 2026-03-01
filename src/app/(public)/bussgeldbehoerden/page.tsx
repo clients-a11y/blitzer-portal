@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: 'Alle zuständigen Bußgeldbehörden für Verkehrsverstöße in Deutschland, geordnet nach Bundesland.',
 }
 
-export const revalidate = 300
+export const dynamic = 'force-dynamic'
 
 export default async function BehoerdenPage() {
   const [behoerden, bundeslaenderStats] = await Promise.all([

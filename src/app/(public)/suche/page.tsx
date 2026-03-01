@@ -100,7 +100,7 @@ export default function SuchePage() {
           </button>
         </div>
         <p className="text-xs text-gray-500 mt-2">
-          Beispiele: „A9 Bayern", „Stammbach", „Abstandsverstoß München"
+          Beispiele: &bdquo;A9 Bayern&ldquo;, &bdquo;Stammbach&ldquo;, &bdquo;Abstandsverstoß München&ldquo;
         </p>
       </form>
 

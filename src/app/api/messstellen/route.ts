@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
   const ort = extractOrt(titel)
 
   // Generate unique slug
-  let baseSlug = slugify(titel)
+  const baseSlug = slugify(titel)
   let slug = baseSlug
   let counter = 1
 

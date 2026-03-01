@@ -1,8 +1,3 @@
-import { type ClassValue, clsx } from 'clsx'
-
-export function cn(...inputs: ClassValue[]) {
-  return inputs.filter(Boolean).join(' ')
-}
 
 export function slugify(text: string): string {
   return text

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     'Übersicht aller Blitzer-Messstellen in Deutschland, sortiert nach Bundesland und Verstoßart.',
 }
 
-export const revalidate = 300
+export const dynamic = 'force-dynamic'
 
 interface Props {
   searchParams: Promise<{ verstossArt?: string; bundesland?: string }>
