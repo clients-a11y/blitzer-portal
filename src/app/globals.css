@@ -1,0 +1,151 @@
+@import "tailwindcss";
+
+:root {
+  --color-primary: #003366;
+  --color-primary-dark: #002244;
+  --color-primary-light: #004080;
+  --color-accent: #f0b429;
+  --color-accent-dark: #d4a017;
+  --color-surface: #f5f7fa;
+  --color-border: #d1d9e0;
+  --color-text: #1a1a2e;
+  --color-text-muted: #6b7280;
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --color-error: #dc2626;
+  --background: #ffffff;
+  --foreground: #1a1a2e;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'BundesSans', 'Arial', 'Helvetica Neue', sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Government-style typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--color-text);
+}
+
+/* Focus styles for accessibility */
+*:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Skip to content for accessibility */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: var(--color-primary);
+  color: white;
+  padding: 8px;
+  z-index: 100;
+  transition: top 0.1s;
+}
+.skip-link:focus {
+  top: 6px;
+}
+
+/* Government badge/chip styles */
+.badge-geschwindigkeit {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffc107;
+}
+.badge-abstand {
+  background-color: #cce5ff;
+  color: #004085;
+  border: 1px solid #b8daff;
+}
+.badge-rotlicht {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+/* Table styles */
+.gov-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.gov-table th {
+  background: var(--color-primary);
+  color: white;
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.025em;
+}
+.gov-table td {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+.gov-table tr:nth-child(even) td {
+  background-color: var(--color-surface);
+}
+.gov-table tr:hover td {
+  background-color: #e8eef5;
+}
+
+/* Card styles */
+.gov-card {
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.gov-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 51, 102, 0.12);
+}
+
+/* Section divider with government style */
+.gov-section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  padding-bottom: 0.75rem;
+  border-bottom: 3px solid var(--color-accent);
+  margin-bottom: 1.5rem;
+}
+
+/* Status badge */
+.status-pending { background: #fef9c3; color: #713f12; border: 1px solid #fde047; }
+.status-researching { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+.status-completed { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+.status-failed { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+/* Print styles for SEO-friendly structured content */
+@media print {
+  nav, footer, .no-print { display: none; }
+  body { font-size: 12pt; }
+  h1 { font-size: 18pt; }
+  h2 { font-size: 15pt; }
+  h3 { font-size: 13pt; }
+}
+
+/* Responsive utilities */
+.container-gov {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .container-gov { padding: 0 1.5rem; }
+}
+
+@media (min-width: 1024px) {
+  .container-gov { padding: 0 2rem; }
+}

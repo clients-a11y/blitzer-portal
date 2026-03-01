@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum VerstossArt {
+  GESCHWINDIGKEIT
+  ABSTAND
+  ROTLICHT
+}
+
+enum ResearchStatus {
+  PENDING
+  RESEARCHING
+  COMPLETED
+  FAILED
+}
+
+model Messstelle {
+  id          String      @id @default(cuid())
+  titel       String
+  verstossArt VerstossArt
+  bundesland  String
+  ort         String
+  autobahn    String?
+  abschnitt   String?
+  kilometer   String?
+  slug        String      @unique
+
+  beschreibung          String? @db.Text
+  standortBeschreibung  String? @db.Text
+  geraeteBeschreibung   String? @db.Text
+  einspruchBeschreibung String? @db.Text
+  faq                   Json?
+  bussgeldTabelle       Json?
+
+  researchStatus ResearchStatus @default(PENDING)
+  researchError  String?        @db.Text
+
+  behoerde   Behoerde? @relation(fields: [behoerdeId], references: [id])
+  behoerdeId String?
+
+  istVeroeffentlicht Boolean  @default(false)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([bundesland])
+  @@index([ort])
+  @@index([autobahn])
+  @@index([verstossArt])
+  @@index([researchStatus])
+}
+
+model Behoerde {
+  id           String @id @default(cuid())
+  name         String
+  bundesland   String
+  adresse      String? @db.Text
+  plz          String?
+  stadt        String?
+  telefon      String?
+  email        String?
+  website      String?
+  beschreibung String? @db.Text
+  slug         String  @unique
+
+  messstellen Messstelle[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([bundesland])
+}
+
+model AdminUser {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
