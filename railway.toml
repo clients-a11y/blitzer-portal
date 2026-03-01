@@ -5,3 +5,6 @@ builder = "NIXPACKS"
 startCommand = "npx prisma db push && npm run db:seed && npm start"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
+
+[variables]
+NEXTAUTH_URL = "https://blitzer-portal-production.up.railway.app"

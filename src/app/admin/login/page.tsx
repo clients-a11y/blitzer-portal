@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import { Zap, Mail, Lock, AlertCircle, Loader2 } from 'lucide-react'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -31,59 +32,88 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f5f7fa] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
-        <div className="bg-[#003366] text-white p-6 rounded-t text-center">
-          <div className="w-12 h-12 bg-[#f0b429] rounded mx-auto mb-3 flex items-center justify-center">
-            <span className="text-[#1a1a2e] text-xl font-black">B</span>
+        {/* Logo */}
+        <div className="text-center mb-8">
+          <div className="w-14 h-14 bg-blue-700 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-700/30">
+            <Zap className="w-7 h-7 text-amber-400" fill="currentColor" />
           </div>
-          <h1 className="text-lg font-bold">Blitzer-Portal</h1>
-          <p className="text-blue-200 text-sm">Admin-Anmeldung</p>
+          <h1 className="text-2xl font-extrabold text-slate-900">Blitzer-Portal</h1>
+          <p className="text-slate-500 text-sm mt-1">Admin-Anmeldung</p>
         </div>
-        <div className="bg-white border border-gray-200 border-t-0 rounded-b p-6 shadow-sm">
+
+        {/* Card */}
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="email" className="block text-sm font-semibold text-slate-700 mb-1.5">
                 E-Mail-Adresse
               </label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                autoComplete="email"
-                className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:border-[#003366]"
-              />
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  autoComplete="email"
+                  placeholder="admin@example.de"
+                  className="w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all text-slate-700 placeholder-slate-400"
+                />
+              </div>
             </div>
+
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="password" className="block text-sm font-semibold text-slate-700 mb-1.5">
                 Passwort
               </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                autoComplete="current-password"
-                className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:border-[#003366]"
-              />
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  autoComplete="current-password"
+                  placeholder="••••••••"
+                  className="w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all text-slate-700 placeholder-slate-400"
+                />
+              </div>
             </div>
+
             {error && (
-              <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded px-3 py-2" role="alert">
+              <div
+                className="flex items-start gap-2.5 text-red-700 text-sm bg-red-50 border border-red-200 rounded-xl px-3.5 py-3"
+                role="alert"
+              >
+                <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
                 {error}
-              </p>
+              </div>
             )}
+
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#003366] text-white py-2.5 text-sm font-semibold rounded hover:bg-[#002244] transition-colors disabled:opacity-60"
+              className="w-full bg-blue-700 text-white py-2.5 text-sm font-bold rounded-xl hover:bg-blue-800 transition-colors disabled:opacity-60 flex items-center justify-center gap-2 mt-2"
             >
-              {loading ? 'Anmelden ...' : 'Anmelden'}
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Anmelden ...
+                </>
+              ) : (
+                'Anmelden'
+              )}
             </button>
           </form>
         </div>
+
+        <p className="text-center text-xs text-slate-400 mt-6">
+          Blitzer-Portal Admin-Bereich
+        </p>
       </div>
     </div>
   )
