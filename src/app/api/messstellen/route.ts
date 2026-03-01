@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { slugify, extractBundesland, extractAutobahn, extractOrt } from '@/lib/utils'
+import { runResearchAgent } from '@/lib/agent'
 import type { VerstossArt } from '@/types'
 
 export async function GET(request: NextRequest) {
@@ -91,13 +92,8 @@ export async function POST(request: NextRequest) {
     },
   })
 
-  // Trigger research agent asynchronously
-  const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
-  fetch(`${baseUrl}/api/agent/research`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-internal-secret': process.env.NEXTAUTH_SECRET || '' },
-    body: JSON.stringify({ messstelleId: messstelle.id }),
-  }).catch(console.error)
+  // Trigger research agent asynchronously (direkt, ohne HTTP-Loopback)
+  runResearchAgent(messstelle.id).catch(console.error)
 
   return NextResponse.json(messstelle, { status: 201 })
 }
