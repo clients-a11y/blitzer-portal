@@ -10,6 +10,7 @@ export default function AdminNav({ userName }: { userName: string }) {
   const navLinks = [
     { href: '/admin', label: 'Dashboard' },
     { href: '/admin/messstellen', label: 'Messstellen' },
+    { href: '/admin/messstellen/import', label: 'XML-Import' },
     { href: '/admin/behoerden', label: 'Behörden' },
   ]
 
