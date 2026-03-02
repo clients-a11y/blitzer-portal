@@ -6,7 +6,7 @@ import { formatDate } from '@/lib/utils'
 export const dynamic = 'force-dynamic'
 
 interface Props {
-  searchParams: Promise<{ status?: string; page?: string }>
+  searchParams: Promise<{ status?: string; page?: string; imported?: string }>
 }
 
 const statusLabels: Record<string, string> = {
@@ -27,6 +27,7 @@ export default async function AdminMessstellenPage({ searchParams }: Props) {
   const params = await searchParams
   const statusFilter = params.status
   const page = parseInt(params.page || '1')
+  const importedCount = params.imported ? parseInt(params.imported) : null
   const limit = 25
 
   const where: Record<string, unknown> = {}
@@ -47,17 +48,31 @@ export default async function AdminMessstellenPage({ searchParams }: Props) {
 
   return (
     <div>
+      {importedCount !== null && (
+        <div className="bg-green-50 border border-green-200 rounded p-3 mb-4 text-sm text-green-800">
+          <strong>{importedCount} Messstelle{importedCount !== 1 ? 'n' : ''}</strong> erfolgreich importiert — die Recherche läuft im Hintergrund.
+        </div>
+      )}
+
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Messstellen</h1>
           <p className="text-sm text-gray-500 mt-1">{total} Einträge gesamt</p>
         </div>
-        <Link
-          href="/admin/messstellen/neu"
-          className="bg-[#003366] text-white px-4 py-2 text-sm font-medium rounded hover:bg-[#002244] transition-colors flex items-center gap-2"
-        >
-          <span>+</span> Neue Messstelle
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/admin/messstellen/import"
+            className="bg-white text-[#003366] border border-[#003366] px-4 py-2 text-sm font-medium rounded hover:bg-blue-50 transition-colors"
+          >
+            XML importieren
+          </Link>
+          <Link
+            href="/admin/messstellen/neu"
+            className="bg-[#003366] text-white px-4 py-2 text-sm font-medium rounded hover:bg-[#002244] transition-colors flex items-center gap-2"
+          >
+            <span>+</span> Neue Messstelle
+          </Link>
+        </div>
       </div>
 
       {/* Filter tabs */}
