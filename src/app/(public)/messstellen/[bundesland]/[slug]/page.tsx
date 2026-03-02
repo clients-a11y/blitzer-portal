@@ -90,7 +90,7 @@ function SectionCard({
   return (
     <section
       aria-labelledby={id}
-      className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6"
+      className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6"
     >
       <h2
         id={id}
@@ -159,7 +159,7 @@ export default async function MessstelleDetailPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="min-h-screen bg-slate-50/50">
+      <div className="min-h-screen bg-[#F8FAFC]">
         <div className="container-gov py-8">
           <Breadcrumb
             items={[
@@ -172,7 +172,7 @@ export default async function MessstelleDetailPage({ params }: Props) {
 
           {/* Hero card */}
           <div
-            className={`bg-gradient-to-br ${cfg.heroBg} via-white to-white border border-slate-100 rounded-2xl p-6 mb-6 shadow-sm`}
+            className={`bg-gradient-to-br ${cfg.heroBg} via-white to-white border border-slate-200 rounded-2xl p-6 mb-6 shadow-sm`}
           >
             <div className="flex flex-wrap items-start gap-2.5 mb-3">
               <span
@@ -188,41 +188,41 @@ export default async function MessstelleDetailPage({ params }: Props) {
               )}
             </div>
 
-            <h1 className="text-xl md:text-2xl font-bold text-slate-900 mb-3">
+            <h1 className="text-xl md:text-2xl font-bold text-slate-950 mb-3">
               {messstelle.titel}
             </h1>
 
-            <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-sm text-slate-500">
+            <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-sm text-slate-600">
               <span className="flex items-center gap-1.5">
-                <MapPin className="w-4 h-4 text-sky-400 flex-shrink-0" />
+                <MapPin className="w-4 h-4 text-sky-600 flex-shrink-0" />
                 {messstelle.bundesland}
               </span>
               {messstelle.ort && (
                 <span className="flex items-center gap-1.5">
-                  <Building2 className="w-4 h-4 text-sky-400 flex-shrink-0" />
+                  <Building2 className="w-4 h-4 text-sky-600 flex-shrink-0" />
                   {messstelle.ort}
                 </span>
               )}
               {messstelle.abschnitt && (
                 <span className="flex items-center gap-1.5">
-                  <Layers className="w-4 h-4 text-sky-400 flex-shrink-0" />
+                  <Layers className="w-4 h-4 text-sky-600 flex-shrink-0" />
                   Abschnitt {messstelle.abschnitt}
                 </span>
               )}
               {messstelle.kilometer && (
                 <span className="flex items-center gap-1.5">
-                  <Hash className="w-4 h-4 text-sky-400 flex-shrink-0" />
+                  <Hash className="w-4 h-4 text-sky-600 flex-shrink-0" />
                   km {messstelle.kilometer}
                 </span>
               )}
               <span className="flex items-center gap-1.5">
-                <Calendar className="w-4 h-4 text-sky-400 flex-shrink-0" />
+                <Calendar className="w-4 h-4 text-sky-600 flex-shrink-0" />
                 Eingetragen am {formatDate(messstelle.createdAt)}
               </span>
             </div>
 
             {messstelle.beschreibung && (
-              <p className="mt-4 text-slate-600 leading-relaxed border-t border-slate-100 pt-4">
+              <p className="mt-4 text-slate-700 leading-relaxed border-t border-slate-100 pt-4">
                 {messstelle.beschreibung}
               </p>
             )}
@@ -372,7 +372,7 @@ export default async function MessstelleDetailPage({ params }: Props) {
               {faq && faq.length > 0 && (
                 <section
                   aria-labelledby="faq-heading"
-                  className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6"
+                  className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6"
                   itemScope
                   itemType="https://schema.org/FAQPage"
                 >
@@ -389,7 +389,7 @@ export default async function MessstelleDetailPage({ params }: Props) {
                     {faq.map((item, i) => (
                       <div
                         key={i}
-                        className="bg-slate-50 rounded-xl p-4"
+                        className="bg-slate-50 rounded-xl p-4 border border-slate-100"
                         itemScope
                         itemType="https://schema.org/Question"
                         itemProp="mainEntity"
@@ -401,7 +401,7 @@ export default async function MessstelleDetailPage({ params }: Props) {
                           {item.frage}
                         </dt>
                         <dd
-                          className="text-slate-600 text-sm leading-relaxed"
+                          className="text-slate-700 text-sm leading-relaxed"
                           itemScope
                           itemType="https://schema.org/Answer"
                           itemProp="acceptedAnswer"
@@ -419,10 +419,10 @@ export default async function MessstelleDetailPage({ params }: Props) {
             <aside className="space-y-4">
               {/* Behörde */}
               {messstelle.behoerde && (
-                <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
                   <h2 className="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2">
                     <div className="w-8 h-8 rounded-xl bg-sky-100 flex items-center justify-center flex-shrink-0">
-                      <Building2 className="w-4 h-4 text-sky-600" />
+                      <Building2 className="w-4 h-4 text-sky-700" />
                     </div>
                     Zuständige Bußgeldbehörde
                   </h2>
@@ -431,7 +431,7 @@ export default async function MessstelleDetailPage({ params }: Props) {
                       {messstelle.behoerde.name}
                     </p>
                     {messstelle.behoerde.adresse && (
-                      <p className="text-slate-500 text-xs leading-relaxed">
+                      <p className="text-slate-600 text-xs leading-relaxed">
                         {messstelle.behoerde.adresse}
                         {messstelle.behoerde.plz && (
                           <>
@@ -444,7 +444,7 @@ export default async function MessstelleDetailPage({ params }: Props) {
                     {messstelle.behoerde.telefon && (
                       <a
                         href={`tel:${messstelle.behoerde.telefon}`}
-                        className="flex items-center gap-2 text-xs text-sky-700 hover:text-sky-900 transition-colors"
+                        className="flex items-center gap-2 text-xs text-sky-700 hover:text-sky-900 transition-colors duration-200 cursor-pointer"
                       >
                         <Phone className="w-3.5 h-3.5 flex-shrink-0" />
                         {messstelle.behoerde.telefon}
@@ -453,7 +453,7 @@ export default async function MessstelleDetailPage({ params }: Props) {
                     {messstelle.behoerde.email && (
                       <a
                         href={`mailto:${messstelle.behoerde.email}`}
-                        className="flex items-center gap-2 text-xs text-sky-700 hover:text-sky-900 transition-colors break-all"
+                        className="flex items-center gap-2 text-xs text-sky-700 hover:text-sky-900 transition-colors duration-200 break-all cursor-pointer"
                       >
                         <Mail className="w-3.5 h-3.5 flex-shrink-0" />
                         {messstelle.behoerde.email}
@@ -464,22 +464,22 @@ export default async function MessstelleDetailPage({ params }: Props) {
                         href={messstelle.behoerde.website}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-xs text-sky-700 hover:text-sky-900 transition-colors"
+                        className="flex items-center gap-2 text-xs text-sky-700 hover:text-sky-900 transition-colors duration-200 cursor-pointer"
                       >
                         <Globe className="w-3.5 h-3.5 flex-shrink-0" />
                         Website besuchen
-                        <ExternalLink className="w-3 h-3 text-slate-400" />
+                        <ExternalLink className="w-3 h-3 text-slate-500" />
                       </a>
                     )}
                     {messstelle.behoerde.beschreibung && (
-                      <p className="text-xs text-slate-400 pt-1 leading-relaxed">
+                      <p className="text-xs text-slate-600 pt-1 leading-relaxed">
                         {messstelle.behoerde.beschreibung}
                       </p>
                     )}
                   </div>
                   <Link
                     href={`/bussgeldbehoerden/${encodeURIComponent(messstelle.bundesland.toLowerCase().replace(/\s/g, '-'))}`}
-                    className="block text-center mt-4 text-xs text-sky-600 font-medium hover:text-sky-800 bg-sky-50 hover:bg-sky-100 rounded-xl py-2.5 transition-colors cursor-pointer"
+                    className="block text-center mt-4 text-xs text-sky-700 font-medium hover:text-sky-900 bg-sky-50 hover:bg-sky-100 rounded-xl py-2.5 transition-colors duration-200 cursor-pointer"
                   >
                     Alle Behörden in {messstelle.bundesland}
                   </Link>
@@ -487,33 +487,33 @@ export default async function MessstelleDetailPage({ params }: Props) {
               )}
 
               {/* Quick Links */}
-              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
                 <h3 className="text-sm font-bold text-slate-800 mb-3">Weitere Informationen</h3>
                 <ul className="space-y-0.5">
                   <li>
                     <Link
                       href="/bussgeldbehoerden"
-                      className="flex items-center gap-2 text-xs text-slate-600 hover:text-sky-700 hover:bg-sky-50 px-2.5 py-2 rounded-xl transition-colors group cursor-pointer"
+                      className="flex items-center gap-2 text-xs text-slate-600 hover:text-sky-700 hover:bg-sky-50 px-2.5 py-2 rounded-xl transition-colors duration-200 group cursor-pointer"
                     >
-                      <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-sky-500 flex-shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                      <ChevronRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-sky-600 flex-shrink-0 group-hover:translate-x-0.5 transition-transform duration-200" />
                       Alle Bußgeldbehörden
                     </Link>
                   </li>
                   <li>
                     <Link
                       href={`/messstellen/${bundesland}`}
-                      className="flex items-center gap-2 text-xs text-slate-600 hover:text-sky-700 hover:bg-sky-50 px-2.5 py-2 rounded-xl transition-colors group cursor-pointer"
+                      className="flex items-center gap-2 text-xs text-slate-600 hover:text-sky-700 hover:bg-sky-50 px-2.5 py-2 rounded-xl transition-colors duration-200 group cursor-pointer"
                     >
-                      <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-sky-500 flex-shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                      <ChevronRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-sky-600 flex-shrink-0 group-hover:translate-x-0.5 transition-transform duration-200" />
                       Alle Messstellen in {messstelle.bundesland}
                     </Link>
                   </li>
                   <li>
                     <Link
                       href="/messstellen"
-                      className="flex items-center gap-2 text-xs text-slate-600 hover:text-sky-700 hover:bg-sky-50 px-2.5 py-2 rounded-xl transition-colors group cursor-pointer"
+                      className="flex items-center gap-2 text-xs text-slate-600 hover:text-sky-700 hover:bg-sky-50 px-2.5 py-2 rounded-xl transition-colors duration-200 group cursor-pointer"
                     >
-                      <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-sky-500 flex-shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                      <ChevronRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-sky-600 flex-shrink-0 group-hover:translate-x-0.5 transition-transform duration-200" />
                       Messstellen-Übersicht
                     </Link>
                   </li>
@@ -521,7 +521,7 @@ export default async function MessstelleDetailPage({ params }: Props) {
               </div>
 
               {/* Disclaimer */}
-              <div className="bg-amber-50 border border-amber-100 rounded-2xl p-4">
+              <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
                 <div className="flex gap-2.5">
                   <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
                   <p className="text-xs text-amber-800 leading-relaxed">
