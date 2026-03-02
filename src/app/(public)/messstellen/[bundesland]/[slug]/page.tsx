@@ -58,17 +58,23 @@ const verstossConfig = {
   GESCHWINDIGKEIT: {
     Icon: Gauge,
     badge: 'bg-amber-50 text-amber-700 border border-amber-200',
-    heroBg: 'from-amber-50/50',
+    accentBorder: 'border-l-amber-400',
+    iconBg: 'bg-amber-100',
+    iconColor: 'text-amber-600',
   },
   ABSTAND: {
     Icon: Maximize2,
     badge: 'bg-sky-50 text-sky-700 border border-sky-200',
-    heroBg: 'from-sky-50/50',
+    accentBorder: 'border-l-sky-400',
+    iconBg: 'bg-sky-100',
+    iconColor: 'text-sky-600',
   },
   ROTLICHT: {
     Icon: CircleX,
     badge: 'bg-red-50 text-red-600 border border-red-200',
-    heroBg: 'from-red-50/50',
+    accentBorder: 'border-l-red-400',
+    iconBg: 'bg-red-100',
+    iconColor: 'text-red-600',
   },
 } as const
 
@@ -90,20 +96,19 @@ function SectionCard({
   return (
     <section
       aria-labelledby={id}
-      className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6"
+      className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden"
     >
-      <h2
-        id={id}
-        className="text-base font-bold text-slate-900 flex items-center gap-2.5 mb-4 pb-3 border-b border-slate-100"
-      >
+      <div className="bg-slate-50 border-b border-slate-200 px-5 py-3 flex items-center gap-2.5">
         <div
-          className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 ${iconBg}`}
+          className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${iconBg}`}
         >
-          <Icon className={`w-4 h-4 ${iconColor}`} />
+          <Icon className={`w-3.5 h-3.5 ${iconColor}`} />
         </div>
-        {title}
-      </h2>
-      {children}
+        <h2 id={id} className="text-sm font-bold text-slate-800">
+          {title}
+        </h2>
+      </div>
+      <div className="p-5">{children}</div>
     </section>
   )
 }
@@ -172,9 +177,9 @@ export default async function MessstelleDetailPage({ params }: Props) {
 
           {/* Hero card */}
           <div
-            className={`bg-gradient-to-br ${cfg.heroBg} via-white to-white border border-slate-200 rounded-2xl p-6 mb-6 shadow-sm`}
+            className={`bg-white border-l-4 ${cfg.accentBorder} border border-slate-200 rounded-xl p-6 mb-6 shadow-sm`}
           >
-            <div className="flex flex-wrap items-start gap-2.5 mb-3">
+            <div className="flex flex-wrap items-start gap-2.5 mb-4">
               <span
                 className={`inline-flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-full font-medium ${cfg.badge}`}
               >
@@ -188,41 +193,41 @@ export default async function MessstelleDetailPage({ params }: Props) {
               )}
             </div>
 
-            <h1 className="text-xl md:text-2xl font-bold text-slate-950 mb-3">
+            <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight mb-4">
               {messstelle.titel}
             </h1>
 
-            <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-sm text-slate-600">
+            <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-slate-600">
               <span className="flex items-center gap-1.5">
-                <MapPin className="w-4 h-4 text-sky-600 flex-shrink-0" />
+                <MapPin className="w-4 h-4 text-slate-400 flex-shrink-0" />
                 {messstelle.bundesland}
               </span>
               {messstelle.ort && (
                 <span className="flex items-center gap-1.5">
-                  <Building2 className="w-4 h-4 text-sky-600 flex-shrink-0" />
+                  <Building2 className="w-4 h-4 text-slate-400 flex-shrink-0" />
                   {messstelle.ort}
                 </span>
               )}
               {messstelle.abschnitt && (
                 <span className="flex items-center gap-1.5">
-                  <Layers className="w-4 h-4 text-sky-600 flex-shrink-0" />
+                  <Layers className="w-4 h-4 text-slate-400 flex-shrink-0" />
                   Abschnitt {messstelle.abschnitt}
                 </span>
               )}
               {messstelle.kilometer && (
                 <span className="flex items-center gap-1.5">
-                  <Hash className="w-4 h-4 text-sky-600 flex-shrink-0" />
+                  <Hash className="w-4 h-4 text-slate-400 flex-shrink-0" />
                   km {messstelle.kilometer}
                 </span>
               )}
               <span className="flex items-center gap-1.5">
-                <Calendar className="w-4 h-4 text-sky-600 flex-shrink-0" />
+                <Calendar className="w-4 h-4 text-slate-400 flex-shrink-0" />
                 Eingetragen am {formatDate(messstelle.createdAt)}
               </span>
             </div>
 
             {messstelle.beschreibung && (
-              <p className="mt-4 text-slate-700 leading-relaxed border-t border-slate-100 pt-4">
+              <p className="mt-4 text-slate-700 leading-relaxed border-t border-slate-100 pt-4 text-sm">
                 {messstelle.beschreibung}
               </p>
             )}
@@ -230,16 +235,16 @@ export default async function MessstelleDetailPage({ params }: Props) {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Main content */}
-            <div className="lg:col-span-2 space-y-5">
+            <div className="lg:col-span-2 space-y-4">
               {messstelle.standortBeschreibung && (
                 <SectionCard
                   id="standort-heading"
                   icon={MapPin}
-                  iconBg="bg-sky-100"
-                  iconColor="text-sky-600"
+                  iconBg="bg-orange-100"
+                  iconColor="text-orange-600"
                   title="Standort der Messstelle"
                 >
-                  <p className="text-slate-600 leading-relaxed">
+                  <p className="text-slate-700 leading-relaxed text-sm">
                     {messstelle.standortBeschreibung}
                   </p>
                 </SectionCard>
@@ -249,11 +254,11 @@ export default async function MessstelleDetailPage({ params }: Props) {
                 <SectionCard
                   id="geraet-heading"
                   icon={ScanLine}
-                  iconBg="bg-indigo-100"
-                  iconColor="text-indigo-600"
+                  iconBg="bg-slate-100"
+                  iconColor="text-slate-600"
                   title="Messgerät und Messtechnik"
                 >
-                  <p className="text-slate-600 leading-relaxed">
+                  <p className="text-slate-700 leading-relaxed text-sm">
                     {messstelle.geraeteBeschreibung}
                   </p>
                 </SectionCard>
@@ -267,17 +272,17 @@ export default async function MessstelleDetailPage({ params }: Props) {
                   iconColor="text-emerald-600"
                   title={`Bußgeldkatalog – ${VERSTOSS_LABELS[messstelle.verstossArt as keyof typeof VERSTOSS_LABELS]}`}
                 >
-                  <div className="overflow-x-auto -mx-6">
+                  <div className="overflow-x-auto -mx-5 -mb-5">
                     <table className="w-full text-sm" role="table">
                       <caption className="sr-only">
                         Bußgeldkatalog für{' '}
                         {VERSTOSS_LABELS[messstelle.verstossArt as keyof typeof VERSTOSS_LABELS]}
                       </caption>
                       <thead>
-                        <tr className="bg-slate-50 border-b border-slate-100">
+                        <tr className="bg-slate-800 text-white">
                           <th
                             scope="col"
-                            className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                            className="px-5 py-3 text-left text-xs font-bold uppercase tracking-wider"
                           >
                             Kategorie
                           </th>
@@ -285,13 +290,13 @@ export default async function MessstelleDetailPage({ params }: Props) {
                             <>
                               <th
                                 scope="col"
-                                className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                                className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider"
                               >
                                 Innerorts
                               </th>
                               <th
                                 scope="col"
-                                className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                                className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider"
                               >
                                 Außerorts
                               </th>
@@ -301,57 +306,57 @@ export default async function MessstelleDetailPage({ params }: Props) {
                             messstelle.verstossArt === 'ROTLICHT') && (
                             <th
                               scope="col"
-                              className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                              className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider"
                             >
                               Bußgeld
                             </th>
                           )}
                           <th
                             scope="col"
-                            className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                            className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider"
                           >
                             Punkte
                           </th>
                           <th
                             scope="col"
-                            className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                            className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider"
                           >
                             Fahrverbot
                           </th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-50">
+                      <tbody className="divide-y divide-slate-100">
                         {bussgeldTabelle.map((row, i) => (
-                          <tr key={i} className="hover:bg-sky-50/40 transition-colors">
-                            <td className="px-6 py-3 font-medium text-slate-800">
+                          <tr key={i} className="hover:bg-orange-50/50 transition-colors duration-150">
+                            <td className="px-5 py-3 font-semibold text-slate-800 text-xs">
                               {row.kategorie}
                             </td>
                             {messstelle.verstossArt === 'GESCHWINDIGKEIT' && (
                               <>
-                                <td className="px-4 py-3 text-slate-600">
+                                <td className="px-4 py-3 text-slate-600 text-xs">
                                   {row.innerorts || '–'}
                                 </td>
-                                <td className="px-4 py-3 text-slate-600">
+                                <td className="px-4 py-3 text-slate-600 text-xs">
                                   {row.ausserorts || '–'}
                                 </td>
                               </>
                             )}
                             {(messstelle.verstossArt === 'ABSTAND' ||
                               messstelle.verstossArt === 'ROTLICHT') && (
-                              <td className="px-4 py-3 text-slate-600">
+                              <td className="px-4 py-3 text-slate-600 text-xs">
                                 {row.innerorts || row.ausserorts || '–'}
                               </td>
                             )}
-                            <td className="px-4 py-3 text-slate-600">{row.punkte || '–'}</td>
-                            <td className="px-4 py-3 text-slate-600">{row.fahrverbot || '–'}</td>
+                            <td className="px-4 py-3 text-slate-600 text-xs">{row.punkte || '–'}</td>
+                            <td className="px-4 py-3 text-slate-600 text-xs">{row.fahrverbot || '–'}</td>
                           </tr>
                         ))}
                       </tbody>
                     </table>
+                    <p className="text-xs text-slate-500 px-5 py-3">
+                      * Stand: Bußgeldkatalog 2021 (BKatV). Angaben ohne Gewähr.
+                    </p>
                   </div>
-                  <p className="text-xs text-slate-400 mt-4">
-                    * Stand: Bußgeldkatalog 2021 (BKatV). Angaben ohne Gewähr.
-                  </p>
                 </SectionCard>
               )}
 
@@ -363,7 +368,7 @@ export default async function MessstelleDetailPage({ params }: Props) {
                   iconColor="text-violet-600"
                   title="Einspruch gegen den Bußgeldbescheid"
                 >
-                  <p className="text-slate-600 leading-relaxed">
+                  <p className="text-slate-700 leading-relaxed text-sm">
                     {messstelle.einspruchBeschreibung}
                   </p>
                 </SectionCard>
@@ -372,36 +377,38 @@ export default async function MessstelleDetailPage({ params }: Props) {
               {faq && faq.length > 0 && (
                 <section
                   aria-labelledby="faq-heading"
-                  className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6"
+                  className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden"
                   itemScope
                   itemType="https://schema.org/FAQPage"
                 >
-                  <h2
-                    id="faq-heading"
-                    className="text-base font-bold text-slate-900 flex items-center gap-2.5 mb-4 pb-3 border-b border-slate-100"
-                  >
-                    <div className="w-8 h-8 rounded-xl bg-orange-100 flex items-center justify-center flex-shrink-0">
-                      <HelpCircle className="w-4 h-4 text-orange-600" />
+                  <div className="bg-slate-50 border-b border-slate-200 px-5 py-3 flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-lg bg-orange-100 flex items-center justify-center flex-shrink-0">
+                      <HelpCircle className="w-3.5 h-3.5 text-orange-600" />
                     </div>
-                    Häufig gestellte Fragen
-                  </h2>
-                  <dl className="space-y-3">
+                    <h2 id="faq-heading" className="text-sm font-bold text-slate-800">
+                      Häufig gestellte Fragen
+                    </h2>
+                  </div>
+                  <dl className="divide-y divide-slate-100">
                     {faq.map((item, i) => (
                       <div
                         key={i}
-                        className="bg-slate-50 rounded-xl p-4 border border-slate-100"
+                        className="px-5 py-4"
                         itemScope
                         itemType="https://schema.org/Question"
                         itemProp="mainEntity"
                       >
                         <dt
-                          className="font-semibold text-slate-800 text-sm mb-1.5"
+                          className="font-bold text-slate-900 text-sm mb-2 flex items-start gap-2"
                           itemProp="name"
                         >
+                          <span className="text-orange-500 font-black text-xs mt-0.5 flex-shrink-0">
+                            Q
+                          </span>
                           {item.frage}
                         </dt>
                         <dd
-                          className="text-slate-700 text-sm leading-relaxed"
+                          className="text-slate-600 text-sm leading-relaxed pl-4"
                           itemScope
                           itemType="https://schema.org/Answer"
                           itemProp="acceptedAnswer"
@@ -419,15 +426,15 @@ export default async function MessstelleDetailPage({ params }: Props) {
             <aside className="space-y-4">
               {/* Behörde */}
               {messstelle.behoerde && (
-                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
-                  <h2 className="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-xl bg-sky-100 flex items-center justify-center flex-shrink-0">
-                      <Building2 className="w-4 h-4 text-sky-700" />
+                <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                  <div className="bg-slate-800 px-4 py-3 flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-md bg-orange-500 flex items-center justify-center flex-shrink-0">
+                      <Building2 className="w-3.5 h-3.5 text-white" />
                     </div>
-                    Zuständige Bußgeldbehörde
-                  </h2>
-                  <div className="space-y-2.5">
-                    <p className="font-semibold text-slate-800 text-sm">
+                    <h2 className="text-sm font-bold text-white">Zuständige Bußgeldbehörde</h2>
+                  </div>
+                  <div className="p-4 space-y-3">
+                    <p className="font-bold text-slate-900 text-sm">
                       {messstelle.behoerde.name}
                     </p>
                     {messstelle.behoerde.adresse && (
@@ -444,7 +451,7 @@ export default async function MessstelleDetailPage({ params }: Props) {
                     {messstelle.behoerde.telefon && (
                       <a
                         href={`tel:${messstelle.behoerde.telefon}`}
-                        className="flex items-center gap-2 text-xs text-sky-700 hover:text-sky-900 transition-colors duration-200 cursor-pointer"
+                        className="flex items-center gap-2 text-xs text-orange-600 hover:text-orange-800 transition-colors duration-200 cursor-pointer"
                       >
                         <Phone className="w-3.5 h-3.5 flex-shrink-0" />
                         {messstelle.behoerde.telefon}
@@ -453,7 +460,7 @@ export default async function MessstelleDetailPage({ params }: Props) {
                     {messstelle.behoerde.email && (
                       <a
                         href={`mailto:${messstelle.behoerde.email}`}
-                        className="flex items-center gap-2 text-xs text-sky-700 hover:text-sky-900 transition-colors duration-200 break-all cursor-pointer"
+                        className="flex items-center gap-2 text-xs text-orange-600 hover:text-orange-800 transition-colors duration-200 break-all cursor-pointer"
                       >
                         <Mail className="w-3.5 h-3.5 flex-shrink-0" />
                         {messstelle.behoerde.email}
@@ -464,64 +471,58 @@ export default async function MessstelleDetailPage({ params }: Props) {
                         href={messstelle.behoerde.website}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-xs text-sky-700 hover:text-sky-900 transition-colors duration-200 cursor-pointer"
+                        className="flex items-center gap-2 text-xs text-orange-600 hover:text-orange-800 transition-colors duration-200 cursor-pointer"
                       >
                         <Globe className="w-3.5 h-3.5 flex-shrink-0" />
                         Website besuchen
-                        <ExternalLink className="w-3 h-3 text-slate-500" />
+                        <ExternalLink className="w-3 h-3 text-slate-400" />
                       </a>
                     )}
                     {messstelle.behoerde.beschreibung && (
-                      <p className="text-xs text-slate-600 pt-1 leading-relaxed">
+                      <p className="text-xs text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
                         {messstelle.behoerde.beschreibung}
                       </p>
                     )}
                   </div>
-                  <Link
-                    href={`/bussgeldbehoerden/${encodeURIComponent(messstelle.bundesland.toLowerCase().replace(/\s/g, '-'))}`}
-                    className="block text-center mt-4 text-xs text-sky-700 font-medium hover:text-sky-900 bg-sky-50 hover:bg-sky-100 rounded-xl py-2.5 transition-colors duration-200 cursor-pointer"
-                  >
-                    Alle Behörden in {messstelle.bundesland}
-                  </Link>
+                  <div className="border-t border-slate-100 px-4 py-3">
+                    <Link
+                      href={`/bussgeldbehoerden/${encodeURIComponent(messstelle.bundesland.toLowerCase().replace(/\s/g, '-'))}`}
+                      className="block text-center text-xs text-orange-600 font-semibold hover:text-orange-800 hover:bg-orange-50 rounded-lg py-2 transition-colors duration-200 cursor-pointer"
+                    >
+                      Alle Behörden in {messstelle.bundesland}
+                    </Link>
+                  </div>
                 </div>
               )}
 
               {/* Quick Links */}
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
-                <h3 className="text-sm font-bold text-slate-800 mb-3">Weitere Informationen</h3>
-                <ul className="space-y-0.5">
-                  <li>
-                    <Link
-                      href="/bussgeldbehoerden"
-                      className="flex items-center gap-2 text-xs text-slate-600 hover:text-sky-700 hover:bg-sky-50 px-2.5 py-2 rounded-xl transition-colors duration-200 group cursor-pointer"
-                    >
-                      <ChevronRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-sky-600 flex-shrink-0 group-hover:translate-x-0.5 transition-transform duration-200" />
-                      Alle Bußgeldbehörden
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href={`/messstellen/${bundesland}`}
-                      className="flex items-center gap-2 text-xs text-slate-600 hover:text-sky-700 hover:bg-sky-50 px-2.5 py-2 rounded-xl transition-colors duration-200 group cursor-pointer"
-                    >
-                      <ChevronRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-sky-600 flex-shrink-0 group-hover:translate-x-0.5 transition-transform duration-200" />
-                      Alle Messstellen in {messstelle.bundesland}
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/messstellen"
-                      className="flex items-center gap-2 text-xs text-slate-600 hover:text-sky-700 hover:bg-sky-50 px-2.5 py-2 rounded-xl transition-colors duration-200 group cursor-pointer"
-                    >
-                      <ChevronRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-sky-600 flex-shrink-0 group-hover:translate-x-0.5 transition-transform duration-200" />
-                      Messstellen-Übersicht
-                    </Link>
-                  </li>
+              <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
+                  <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                    Weitere Informationen
+                  </h3>
+                </div>
+                <ul className="p-2">
+                  {[
+                    { href: '/bussgeldbehoerden', label: 'Alle Bußgeldbehörden' },
+                    { href: `/messstellen/${bundesland}`, label: `Messstellen in ${messstelle.bundesland}` },
+                    { href: '/messstellen', label: 'Messstellen-Übersicht' },
+                  ].map(({ href, label }) => (
+                    <li key={href}>
+                      <Link
+                        href={href}
+                        className="flex items-center gap-2 text-xs text-slate-600 hover:text-orange-700 hover:bg-orange-50 px-2.5 py-2.5 rounded-lg transition-colors duration-200 group cursor-pointer"
+                      >
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-orange-500 flex-shrink-0 group-hover:translate-x-0.5 transition-transform duration-200" />
+                        {label}
+                      </Link>
+                    </li>
+                  ))}
                 </ul>
               </div>
 
               {/* Disclaimer */}
-              <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
                 <div className="flex gap-2.5">
                   <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
                   <p className="text-xs text-amber-800 leading-relaxed">
