@@ -5,9 +5,17 @@ interface BreadcrumbItem {
   href?: string
 }
 
-export default function Breadcrumb({ items }: { items: BreadcrumbItem[] }) {
+interface Props {
+  items: BreadcrumbItem[]
+  dark?: boolean
+}
+
+export default function Breadcrumb({ items, dark = false }: Props) {
   return (
-    <nav aria-label="Breadcrumb" className="text-sm text-gray-500 mb-6">
+    <nav
+      aria-label="Breadcrumb"
+      className={`text-sm mb-4 ${dark ? 'text-slate-400' : 'text-slate-500'}`}
+    >
       <ol
         className="flex flex-wrap items-center gap-1"
         itemScope
@@ -22,20 +30,28 @@ export default function Breadcrumb({ items }: { items: BreadcrumbItem[] }) {
             itemType="https://schema.org/ListItem"
           >
             {index > 0 && (
-              <span aria-hidden="true" className="text-gray-300">
+              <span aria-hidden="true" className={dark ? 'text-slate-600' : 'text-slate-300'}>
                 /
               </span>
             )}
             {item.href ? (
               <Link
                 href={item.href}
-                className="hover:text-[#003366] hover:underline transition-colors"
+                className={`transition-colors duration-200 hover:underline cursor-pointer ${
+                  dark
+                    ? 'text-slate-400 hover:text-slate-200'
+                    : 'text-slate-500 hover:text-indigo-600'
+                }`}
                 itemProp="item"
               >
                 <span itemProp="name">{item.label}</span>
               </Link>
             ) : (
-              <span className="text-gray-700 font-medium" itemProp="name" aria-current="page">
+              <span
+                className={`font-medium ${dark ? 'text-slate-200' : 'text-slate-700'}`}
+                itemProp="name"
+                aria-current="page"
+              >
                 {item.label}
               </span>
             )}

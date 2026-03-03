@@ -5,90 +5,83 @@ export default function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer role="contentinfo" className="bg-slate-900 text-slate-400 mt-16">
+    <footer role="contentinfo" className="bg-slate-950 text-slate-400 mt-0">
       <div className="container-gov py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
           {/* Brand */}
-          <div>
+          <div className="lg:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-8 h-8 bg-blue-600 rounded-xl flex items-center justify-center">
-                <Zap className="w-4 h-4 text-amber-400" fill="currentColor" />
+              <div className="w-8 h-8 bg-indigo-600 rounded-xl flex items-center justify-center">
+                <Zap className="w-4 h-4 text-white" fill="currentColor" />
               </div>
-              <span className="text-white font-bold text-sm">Blitzer-Portal</span>
+              <span className="text-white font-bold text-sm tracking-tight">Blitzer-Portal</span>
             </div>
-            <p className="text-sm leading-relaxed">
+            <p className="text-sm leading-relaxed text-slate-500 max-w-xs">
               Das Informationsportal für Blitzer-Messstellen in Deutschland.
-              Detaillierte Informationen zu Verstößen und Bußgeldern.
             </p>
           </div>
 
           {/* Navigation */}
           <div>
-            <h3 className="text-white font-semibold mb-4 text-sm">Navigation</h3>
+            <h3 className="text-white font-semibold mb-4 text-xs uppercase tracking-wider">
+              Navigation
+            </h3>
             <ul className="space-y-2.5 text-sm">
-              <li>
-                <Link href="/" className="hover:text-white transition-colors">
-                  Startseite
-                </Link>
-              </li>
-              <li>
-                <Link href="/messstellen" className="hover:text-white transition-colors">
-                  Messstellen
-                </Link>
-              </li>
-              <li>
-                <Link href="/suche" className="hover:text-white transition-colors">
-                  Suche
-                </Link>
-              </li>
-              <li>
-                <Link href="/bussgeldbehoerden" className="hover:text-white transition-colors">
-                  Bußgeldbehörden
-                </Link>
-              </li>
+              {[
+                { href: '/', label: 'Startseite' },
+                { href: '/messstellen', label: 'Messstellen' },
+                { href: '/bussgeldbehoerden', label: 'Bußgeldbehörden' },
+                { href: '/suche', label: 'Suche' },
+              ].map(({ href, label }) => (
+                <li key={href}>
+                  <Link
+                    href={href}
+                    className="text-slate-500 hover:text-white transition-colors duration-200 cursor-pointer"
+                  >
+                    {label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Categories */}
+          {/* Kategorien */}
           <div>
-            <h3 className="text-white font-semibold mb-4 text-sm">Kategorien</h3>
+            <h3 className="text-white font-semibold mb-4 text-xs uppercase tracking-wider">
+              Kategorien
+            </h3>
             <ul className="space-y-2.5 text-sm">
-              <li>
-                <Link
-                  href="/messstellen?verstossArt=GESCHWINDIGKEIT"
-                  className="hover:text-white transition-colors"
-                >
-                  Geschwindigkeitsmessung
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/messstellen?verstossArt=ABSTAND"
-                  className="hover:text-white transition-colors"
-                >
-                  Abstandsmessung
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/messstellen?verstossArt=ROTLICHT"
-                  className="hover:text-white transition-colors"
-                >
-                  Rotlichtüberwachung
-                </Link>
-              </li>
+              {[
+                { href: '/messstellen?verstossArt=GESCHWINDIGKEIT', label: 'Geschwindigkeit' },
+                { href: '/messstellen?verstossArt=ABSTAND', label: 'Abstand' },
+                { href: '/messstellen?verstossArt=ROTLICHT', label: 'Rotlicht' },
+              ].map(({ href, label }) => (
+                <li key={href}>
+                  <Link
+                    href={href}
+                    className="text-slate-500 hover:text-white transition-colors duration-200 cursor-pointer"
+                  >
+                    {label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Legal */}
+          {/* Rechtliches */}
           <div>
-            <h3 className="text-white font-semibold mb-4 text-sm">Rechtliches</h3>
+            <h3 className="text-white font-semibold mb-4 text-xs uppercase tracking-wider">
+              Rechtliches
+            </h3>
             <ul className="space-y-2.5 text-sm">
-              <li><span className="text-slate-600 cursor-default">Impressum</span></li>
-              <li><span className="text-slate-600 cursor-default">Datenschutz</span></li>
-              <li><span className="text-slate-600 cursor-default">Haftungsausschluss</span></li>
+              <li><span className="text-slate-700 cursor-default">Impressum</span></li>
+              <li><span className="text-slate-700 cursor-default">Datenschutz</span></li>
+              <li><span className="text-slate-700 cursor-default">Haftungsausschluss</span></li>
               <li>
-                <Link href="/admin" className="hover:text-white transition-colors">
+                <Link
+                  href="/admin"
+                  className="text-slate-500 hover:text-white transition-colors duration-200 cursor-pointer"
+                >
                   Admin-Bereich
                 </Link>
               </li>
@@ -96,9 +89,14 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-slate-800 mt-10 pt-8 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-slate-600">
-          <p>© {currentYear} Blitzer-Portal Deutschland. Alle Angaben ohne Gewähr.</p>
-          <p>Informationen dienen ausschließlich allgemeinen Informationszwecken.</p>
+        {/* Bottom bar */}
+        <div className="border-t border-slate-800/60 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
+          <p className="text-xs text-slate-600">
+            © {currentYear} Blitzer-Portal Deutschland. Alle Angaben ohne Gewähr.
+          </p>
+          <p className="text-xs text-slate-700">
+            Informationen dienen ausschließlich allgemeinen Informationszwecken.
+          </p>
         </div>
       </div>
     </footer>

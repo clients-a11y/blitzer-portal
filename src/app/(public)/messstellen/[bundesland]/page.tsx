@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/db'
 import Breadcrumb from '@/components/layout/Breadcrumb'
 import { VERSTOSS_LABELS } from '@/types'
+import { MapPin, ArrowRight, Gauge, Maximize2, CircleX } from 'lucide-react'
 
 interface Props {
   params: Promise<{ bundesland: string }>
@@ -23,12 +24,27 @@ function decodeBundesland(slug: string): string {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { bundesland } = await params
-  const bundeslandName = decodeBundesland(bundesland)
+  const name = decodeBundesland(bundesland)
   return {
-    title: `Blitzer in ${bundeslandName}`,
-    description: `Alle Blitzer-Messstellen in ${bundeslandName}. Informationen zu Geschwindigkeits-, Abstands- und Rotlichtverstößen.`,
+    title: `Blitzer in ${name}`,
+    description: `Alle Blitzer-Messstellen in ${name}. Informationen zu Geschwindigkeits-, Abstands- und Rotlichtverstößen.`,
   }
 }
+
+const verstossConfig = {
+  GESCHWINDIGKEIT: {
+    Icon: Gauge,
+    badge: 'bg-amber-50 text-amber-700 border border-amber-200',
+  },
+  ABSTAND: {
+    Icon: Maximize2,
+    badge: 'bg-sky-50 text-sky-700 border border-sky-200',
+  },
+  ROTLICHT: {
+    Icon: CircleX,
+    badge: 'bg-red-50 text-red-600 border border-red-200',
+  },
+} as const
 
 export default async function BundeslandPage({ params }: Props) {
   const { bundesland } = await params
@@ -43,103 +59,127 @@ export default async function BundeslandPage({ params }: Props) {
     include: { behoerde: { select: { name: true, slug: true } } },
   })
 
-  if (messstellen.length === 0) {
-    notFound()
-  }
+  if (messstellen.length === 0) notFound()
 
-  const verstossColors: Record<string, string> = {
-    GESCHWINDIGKEIT: 'badge-geschwindigkeit',
-    ABSTAND: 'badge-abstand',
-    ROTLICHT: 'badge-rotlicht',
-  }
-
-  // Group by Autobahn
-  const grouped: Record<string, typeof messstellen> = {}
+  // Stats by type
+  const typeCounts: Record<string, number> = {}
   for (const m of messstellen) {
-    const key = m.autobahn || 'Sonstige Straßen'
-    if (!grouped[key]) grouped[key] = []
-    grouped[key].push(m)
+    typeCounts[m.verstossArt] = (typeCounts[m.verstossArt] ?? 0) + 1
   }
 
   return (
-    <div className="container-gov py-8">
-      <Breadcrumb
-        items={[
-          { label: 'Startseite', href: '/' },
-          { label: 'Messstellen', href: '/messstellen' },
-          { label: bundeslandName },
-        ]}
-      />
+    <div className="min-h-screen bg-slate-50">
+      {/* Hero strip */}
+      <div className="bg-slate-950">
+        <div className="container-gov pt-6 pb-8">
+          <Breadcrumb
+            items={[
+              { label: 'Startseite', href: '/' },
+              { label: 'Messstellen', href: '/messstellen' },
+              { label: bundeslandName },
+            ]}
+            dark
+          />
+          <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight mt-2">
+            Blitzer-Messstellen
+            <span className="text-indigo-400 ml-2">{bundeslandName}</span>
+          </h1>
+          <p className="text-slate-400 text-sm mt-1.5">
+            {messstellen.length} Messstelle{messstellen.length !== 1 ? 'n' : ''} gefunden
+          </p>
 
-      <h1 className="text-2xl md:text-3xl font-bold text-[#003366] mb-2">
-        Blitzer-Messstellen {bundeslandName}
-      </h1>
-      <p className="text-gray-600 mb-8">
-        {messstellen.length} Messstelle{messstellen.length !== 1 ? 'n' : ''} in {bundeslandName}
-      </p>
-
-      <div className="space-y-10">
-        {Object.entries(grouped)
-          .sort(([a], [b]) => a.localeCompare(b))
-          .map(([autobahn, stellen]) => (
-            <section key={autobahn} aria-labelledby={`autobahn-${autobahn}`}>
-              <h2
-                id={`autobahn-${autobahn}`}
-                className="gov-section-title flex items-center gap-2"
-              >
-                {autobahn !== 'Sonstige Straßen' && (
-                  <span className="bg-[#003366] text-white text-sm font-bold px-2 py-0.5 rounded">
-                    {autobahn}
+          {/* Type stats */}
+          <div className="flex flex-wrap gap-3 mt-5">
+            {(Object.entries(verstossConfig) as [keyof typeof verstossConfig, typeof verstossConfig[keyof typeof verstossConfig]][]).map(
+              ([art, cfg]) => {
+                const count = typeCounts[art] ?? 0
+                if (count === 0) return null
+                const Icon = cfg.Icon
+                return (
+                  <span
+                    key={art}
+                    className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full font-medium bg-white/10 text-white border border-white/10"
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                    {VERSTOSS_LABELS[art]}: {count}
                   </span>
+                )
+              },
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Card grid */}
+      <div className="container-gov py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          {messstellen.map((m) => {
+            const cfg = verstossConfig[m.verstossArt as keyof typeof verstossConfig]
+            const Icon = cfg.Icon
+            const href = `/messstellen/${bundesland}/${m.slug}`
+            return (
+              <article
+                key={m.id}
+                className="group bg-white border border-slate-200 hover:border-indigo-200 rounded-2xl p-5 hover:shadow-md transition-all duration-200 flex flex-col"
+                itemScope
+                itemType="https://schema.org/Place"
+              >
+                <div className="flex flex-wrap items-center gap-2 mb-3">
+                  <span
+                    className={`inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium ${cfg.badge}`}
+                  >
+                    <Icon className="w-3 h-3" />
+                    {VERSTOSS_LABELS[m.verstossArt as keyof typeof VERSTOSS_LABELS]}
+                  </span>
+                  {m.autobahn && (
+                    <span className="text-xs bg-slate-800 text-white px-2.5 py-1 rounded-lg font-mono font-bold tracking-wide">
+                      {m.autobahn}
+                    </span>
+                  )}
+                </div>
+
+                <h2
+                  className="font-bold text-slate-900 leading-snug text-base mb-1.5 flex-1"
+                  itemProp="name"
+                >
+                  <Link
+                    href={href}
+                    className="hover:text-indigo-700 transition-colors duration-200 cursor-pointer"
+                    itemProp="url"
+                  >
+                    {m.titel}
+                  </Link>
+                </h2>
+
+                {m.ort && (
+                  <p className="text-xs text-slate-400 flex items-center gap-1 mb-2">
+                    <MapPin className="w-3 h-3 flex-shrink-0" />
+                    {m.ort}
+                  </p>
                 )}
-                {autobahn}
-                <span className="text-base font-normal text-gray-400">
-                  ({stellen.length})
-                </span>
-              </h2>
-              <div className="space-y-3">
-                {stellen.map((m) => (
-                  <article key={m.id} className="gov-card p-4">
-                    <div className="flex flex-col sm:flex-row sm:items-start gap-3">
-                      <div className="flex-1">
-                        <div className="flex flex-wrap gap-2 mb-1.5">
-                          <span
-                            className={`text-xs px-2 py-0.5 rounded font-medium ${verstossColors[m.verstossArt]}`}
-                          >
-                            {VERSTOSS_LABELS[m.verstossArt as keyof typeof VERSTOSS_LABELS]}
-                          </span>
-                        </div>
-                        <h3 className="font-semibold text-[#003366]">
-                          <Link
-                            href={`/messstellen/${bundesland}/${m.slug}`}
-                            className="hover:underline"
-                          >
-                            {m.titel}
-                          </Link>
-                        </h3>
-                        {m.beschreibung && (
-                          <p className="text-sm text-gray-600 mt-1.5 line-clamp-2">
-                            {m.beschreibung}
-                          </p>
-                        )}
-                        {m.behoerde && (
-                          <p className="text-xs text-gray-400 mt-1.5">
-                            Behörde: {m.behoerde.name}
-                          </p>
-                        )}
-                      </div>
-                      <Link
-                        href={`/messstellen/${bundesland}/${m.slug}`}
-                        className="flex-shrink-0 bg-[#003366] text-white text-xs px-3 py-1.5 rounded hover:bg-[#002244] transition-colors whitespace-nowrap self-start"
-                      >
-                        Mehr Details
-                      </Link>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </section>
-          ))}
+
+                {m.beschreibung && (
+                  <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed mb-3">
+                    {m.beschreibung}
+                  </p>
+                )}
+
+                {m.behoerde && (
+                  <p className="text-xs text-slate-400 mb-3">
+                    Behörde: {m.behoerde.name}
+                  </p>
+                )}
+
+                <Link
+                  href={href}
+                  className="mt-auto inline-flex items-center gap-1.5 text-xs text-indigo-600 font-semibold hover:text-indigo-800 transition-colors duration-200 group-hover:gap-2 cursor-pointer"
+                >
+                  Details ansehen <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </article>
+            )
+          })}
+        </div>
       </div>
     </div>
   )
