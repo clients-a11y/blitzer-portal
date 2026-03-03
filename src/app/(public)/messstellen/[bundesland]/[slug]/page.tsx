@@ -349,7 +349,7 @@ export default async function MessstelleDetailPage({ params }: Props) {
             </div>
 
             {/* ── RIGHT (sticky sidebar) ── */}
-            <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+            <aside className="space-y-4 lg:sticky lg:top-[72px] lg:self-start">
               {/* Behörde card */}
               {messstelle.behoerde && (
                 <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">

@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { prisma } from '@/lib/db'
 import { VERSTOSS_LABELS, BUNDESLAND_KUERZEL } from '@/types'
-import { Gauge, Maximize2, CircleX, MapPin, Building2, ArrowRight, Zap, Shield, Search } from 'lucide-react'
+import { Gauge, Maximize2, CircleX, MapPin, Building2, ArrowRight, Search } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Startseite',
@@ -17,7 +17,7 @@ async function getHomeData() {
     prisma.messstelle.findMany({
       where: { istVeroeffentlicht: true },
       orderBy: { createdAt: 'desc' },
-      take: 6,
+      take: 8,
       select: {
         id: true,
         titel: true,
@@ -26,7 +26,6 @@ async function getHomeData() {
         ort: true,
         autobahn: true,
         slug: true,
-        beschreibung: true,
       },
     }),
     prisma.messstelle.groupBy({
@@ -58,27 +57,27 @@ async function getHomeData() {
 const verstossConfig = {
   GESCHWINDIGKEIT: {
     Icon: Gauge,
-    badge: 'bg-amber-50 text-amber-700 border border-amber-200',
-    cardBorder: 'border-amber-200 hover:border-amber-300',
-    iconBg: 'bg-amber-100',
     iconColor: 'text-amber-600',
+    iconBg: 'bg-amber-50',
+    badge: 'bg-amber-50 text-amber-700 border border-amber-200',
     href: '/messstellen?verstossArt=GESCHWINDIGKEIT',
+    sub: 'Radar, Blitzer, Section Control',
   },
   ABSTAND: {
     Icon: Maximize2,
-    badge: 'bg-sky-50 text-sky-700 border border-sky-200',
-    cardBorder: 'border-sky-200 hover:border-sky-300',
-    iconBg: 'bg-sky-100',
     iconColor: 'text-sky-600',
+    iconBg: 'bg-sky-50',
+    badge: 'bg-sky-50 text-sky-700 border border-sky-200',
     href: '/messstellen?verstossArt=ABSTAND',
+    sub: 'Seitenradar, Videobrücken',
   },
   ROTLICHT: {
     Icon: CircleX,
-    badge: 'bg-red-50 text-red-600 border border-red-200',
-    cardBorder: 'border-red-200 hover:border-red-300',
-    iconBg: 'bg-red-100',
     iconColor: 'text-red-600',
+    iconBg: 'bg-red-50',
+    badge: 'bg-red-50 text-red-600 border border-red-200',
     href: '/messstellen?verstossArt=ROTLICHT',
+    sub: 'Ampelüberwachung, Kameras',
   },
 } as const
 
@@ -108,321 +107,247 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* ── HERO ────────────────────────────────────────────────────── */}
-      <section className="relative bg-slate-950 text-white overflow-hidden">
-        {/* Background glow */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl -translate-y-1/2" />
-          <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-indigo-500/10 rounded-full blur-2xl translate-y-1/2" />
-        </div>
-
-        <div className="relative container-gov pt-20 pb-16 md:pt-24 md:pb-20">
-          {/* Eyebrow pill */}
-          <div className="inline-flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/30 rounded-full px-4 py-1.5 text-xs font-semibold text-indigo-300 mb-6">
-            <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
-            {data.totalMessstellen} Messstellen in {data.bundeslaenderStats.length} Bundesländern
-          </div>
-
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight mb-5 leading-tight">
-            Alle Blitzer-<br />
-            <span className="bg-gradient-to-r from-indigo-400 to-indigo-200 bg-clip-text text-transparent">
-              Messstellen Deutschlands
-            </span>
+      {/* ── PAGE HEADER ─────────────────────────────────────────────── */}
+      <div className="bg-white border-b border-slate-200">
+        <div className="container-gov py-8 md:py-10">
+          <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
+            Blitzer-Messstellen Verzeichnis
           </h1>
-
-          <p className="text-slate-400 text-base md:text-lg leading-relaxed mb-8 max-w-xl">
-            Ihr umfassendes Informationsportal zu Geschwindigkeits-, Abstands- und Rotlichtverstößen,
-            Bußgeldbehörden und Einspruchsmöglichkeiten.
+          <p className="text-slate-500 text-sm mt-1 mb-5">
+            Messstellen, Bußgeldbehörden und Einspruchsmöglichkeiten in Deutschland
           </p>
 
-          <div className="flex flex-wrap gap-3 mb-12">
-            <Link
-              href="/messstellen"
-              className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 text-sm font-semibold rounded-xl transition-colors duration-200 shadow-lg shadow-indigo-900/40 cursor-pointer"
-            >
-              Alle Messstellen
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link
-              href="/suche"
-              className="inline-flex items-center gap-2 bg-white/5 border border-white/10 hover:bg-white/10 text-white px-6 py-3 text-sm font-medium rounded-xl transition-colors duration-200 cursor-pointer"
-            >
-              <Search className="w-4 h-4" />
+          {/* Stats row */}
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm text-slate-600 mb-6">
+            <span>
+              <strong className="text-slate-900 font-bold">{data.totalMessstellen.toLocaleString('de-DE')}</strong>
+              {' '}Messstellen
+            </span>
+            <span className="text-slate-300" aria-hidden="true">·</span>
+            <span>
+              <strong className="text-slate-900 font-bold">{data.bundeslaenderStats.length}</strong>
+              {' '}Bundesländer
+            </span>
+            <span className="text-slate-300" aria-hidden="true">·</span>
+            <span>
+              <strong className="text-slate-900 font-bold">{data.totalBehoerden.toLocaleString('de-DE')}</strong>
+              {' '}Behörden
+            </span>
+          </div>
+
+          {/* Search bar — links to /suche */}
+          <Link
+            href="/suche"
+            aria-label="Zur Suche"
+            className="flex items-center gap-3 bg-slate-50 border border-slate-200 hover:border-indigo-400 hover:bg-white rounded-xl px-4 py-3 max-w-lg transition-all duration-200 group cursor-pointer"
+          >
+            <Search className="w-4 h-4 text-slate-400 flex-shrink-0 group-hover:text-indigo-500 transition-colors duration-200" />
+            <span className="text-slate-400 text-sm flex-1 group-hover:text-slate-500 transition-colors duration-200 select-none">
+              Autobahn, Ort, Bundesland oder Messstelle&nbsp;…
+            </span>
+            <span className="text-xs font-semibold text-indigo-600 flex-shrink-0">
               Suchen
-            </Link>
-          </div>
-
-          {/* Stats strip */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {[
-              { value: data.totalMessstellen, label: 'Messstellen', color: 'text-indigo-400' },
-              { value: data.bundeslaenderStats.length, label: 'Bundesländer', color: 'text-indigo-400' },
-              { value: data.totalBehoerden, label: 'Behörden', color: 'text-indigo-400' },
-              { value: data.geschwindigkeitCount + data.abstandCount + data.rotlichtCount, label: 'Verstöße', color: 'text-indigo-400' },
-            ].map(({ value, label, color }) => (
-              <div
-                key={label}
-                className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 min-w-0"
-              >
-                <div className={`text-2xl font-black leading-none ${color}`}>
-                  {value.toLocaleString('de-DE')}
-                </div>
-                <div className="text-xs text-slate-500 mt-1 font-medium truncate">{label}</div>
-              </div>
-            ))}
-          </div>
+            </span>
+          </Link>
         </div>
-      </section>
+      </div>
 
-      {/* ── VIOLATION TYPE CARDS ────────────────────────────────────── */}
-      <section className="bg-white border-b border-slate-100" aria-labelledby="kategorien-heading">
-        <div className="container-gov py-12">
-          <div className="mb-8">
-            <h2 id="kategorien-heading" className="text-xl font-black text-slate-900 tracking-tight">
-              Kategorien
-            </h2>
-            <p className="text-slate-500 text-sm mt-1">Messstellen nach Verstoßart</p>
-          </div>
+      {/* ── DIRECTORY BODY ──────────────────────────────────────────── */}
+      <div className="bg-slate-50 min-h-screen">
+        <div className="container-gov py-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {(Object.entries(verstossConfig) as [keyof typeof verstossConfig, typeof verstossConfig[keyof typeof verstossConfig]][]).map(
-              ([art, cfg]) => {
-                const count =
-                  art === 'GESCHWINDIGKEIT'
-                    ? data.geschwindigkeitCount
-                    : art === 'ABSTAND'
-                      ? data.abstandCount
-                      : data.rotlichtCount
-                const Icon = cfg.Icon
-                return (
-                  <Link
-                    key={art}
-                    href={cfg.href}
-                    className={`group bg-white border ${cfg.cardBorder} rounded-2xl p-6 hover:shadow-md transition-all duration-200 cursor-pointer`}
-                  >
-                    <div className={`w-10 h-10 ${cfg.iconBg} rounded-xl flex items-center justify-center mb-4`}>
-                      <Icon className={`w-5 h-5 ${cfg.iconColor}`} />
-                    </div>
-                    <div className="text-3xl font-black text-slate-900 mb-1 leading-none">
-                      {count.toLocaleString('de-DE')}
-                    </div>
-                    <div className="font-semibold text-slate-800 text-sm mb-1">
-                      {VERSTOSS_LABELS[art]}
-                    </div>
-                    <div className="text-xs text-slate-500 mb-4">
-                      {art === 'GESCHWINDIGKEIT' && 'Radar, Blitzer, Section Control'}
-                      {art === 'ABSTAND' && 'Seitenradar, Videobrücken'}
-                      {art === 'ROTLICHT' && 'Ampelüberwachung, Kameras'}
-                    </div>
-                    <span className="inline-flex items-center gap-1 text-xs text-indigo-600 font-semibold group-hover:gap-2 transition-all duration-200">
-                      Anzeigen <ArrowRight className="w-3.5 h-3.5" />
-                    </span>
-                  </Link>
-                )
-              },
-            )}
-          </div>
-        </div>
-      </section>
+            {/* ── LEFT COLUMN: browse panels ─────────────────────────── */}
+            <div className="space-y-5">
 
-      {/* ── HOW IT WORKS ────────────────────────────────────────────── */}
-      <section className="bg-slate-50 border-b border-slate-100" aria-labelledby="how-heading">
-        <div className="container-gov py-12">
-          <div className="mb-8">
-            <h2 id="how-heading" className="text-xl font-black text-slate-900 tracking-tight">
-              So funktioniert es
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              {
-                step: '01',
-                icon: Search,
-                title: 'Messstelle suchen',
-                desc: 'Suchen Sie nach Autobahn, Ort oder Bundesland.',
-              },
-              {
-                step: '02',
-                icon: MapPin,
-                title: 'Details einsehen',
-                desc: 'Geräteinformationen, Standortbeschreibung und Bußgeldkatalog auf einen Blick.',
-              },
-              {
-                step: '03',
-                icon: Shield,
-                title: 'Informiert entscheiden',
-                desc: 'Erfahren Sie mehr über Einspruchsmöglichkeiten und zuständige Behörden.',
-              },
-            ].map(({ step, icon: Icon, title, desc }) => (
-              <div key={step} className="flex gap-4">
-                <div className="flex-shrink-0 w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white text-xs font-black">
-                  {step}
-                </div>
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <Icon className="w-4 h-4 text-indigo-500" />
-                    <h3 className="font-bold text-slate-900 text-sm">{title}</h3>
-                  </div>
-                  <p className="text-slate-500 text-sm leading-relaxed">{desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── RECENT MESSSTELLEN ──────────────────────────────────────── */}
-      {data.neueMessstellen.length > 0 && (
-        <section className="bg-white border-b border-slate-100" aria-labelledby="recent-heading">
-          <div className="container-gov py-12">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h2 id="recent-heading" className="text-xl font-black text-slate-900 tracking-tight">
-                  Zuletzt eingetragen
-                </h2>
-                <p className="text-slate-500 text-sm mt-1">Neueste Messstellen im Verzeichnis</p>
-              </div>
-              <Link
-                href="/messstellen"
-                className="hidden sm:inline-flex items-center gap-1.5 text-sm text-indigo-600 font-semibold hover:text-indigo-800 transition-colors duration-200 cursor-pointer"
-              >
-                Alle anzeigen <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {data.neueMessstellen.map((m) => {
-                const cfg = verstossConfig[m.verstossArt as keyof typeof verstossConfig]
-                const Icon = cfg.Icon
-                const href = `/messstellen/${encodeURIComponent(m.bundesland.toLowerCase().replace(/\s/g, '-'))}/${m.slug}`
-                return (
-                  <article
-                    key={m.id}
-                    className="group bg-white border border-slate-200 hover:border-indigo-200 rounded-xl p-4 hover:shadow-md transition-all duration-200 flex flex-col"
-                    itemScope
-                    itemType="https://schema.org/Place"
-                  >
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className={`inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium ${cfg.badge}`}>
-                        <Icon className="w-3 h-3" />
-                        {VERSTOSS_LABELS[m.verstossArt as keyof typeof VERSTOSS_LABELS]}
-                      </span>
-                      {m.autobahn && (
-                        <span className="text-xs bg-slate-800 text-white px-2 py-1 rounded-lg font-mono font-bold">
-                          {m.autobahn}
-                        </span>
-                      )}
-                    </div>
-                    <h3
-                      className="font-bold text-slate-900 text-sm leading-snug mb-1 flex-1"
-                      itemProp="name"
-                    >
-                      <Link
-                        href={href}
-                        className="hover:text-indigo-700 transition-colors duration-200 cursor-pointer"
-                        itemProp="url"
-                      >
-                        {m.titel}
-                      </Link>
-                    </h3>
-                    <p className="text-xs text-slate-400 flex items-center gap-1 mb-3">
-                      <MapPin className="w-3 h-3 flex-shrink-0" />
-                      {m.bundesland}{m.ort && ` · ${m.ort}`}
-                    </p>
-                    {m.beschreibung && (
-                      <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed mb-3">
-                        {m.beschreibung}
-                      </p>
-                    )}
+              {/* Category panel */}
+              <nav aria-labelledby="kategorien-heading">
+                <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
+                  <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
+                    <h2 id="kategorien-heading" className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                      Nach Verstoßart
+                    </h2>
                     <Link
-                      href={href}
-                      className="mt-auto inline-flex items-center gap-1 text-xs text-indigo-600 font-semibold hover:text-indigo-800 transition-colors duration-200 cursor-pointer group-hover:gap-1.5"
+                      href="/messstellen"
+                      className="text-xs text-indigo-600 font-semibold hover:text-indigo-800 transition-colors duration-200 cursor-pointer"
                     >
-                      Details <ArrowRight className="w-3.5 h-3.5" />
+                      Alle →
                     </Link>
-                  </article>
-                )
-              })}
-            </div>
+                  </div>
+                  <ul role="list" className="divide-y divide-slate-100">
+                    {(Object.entries(verstossConfig) as [keyof typeof verstossConfig, typeof verstossConfig[keyof typeof verstossConfig]][]).map(
+                      ([art, cfg]) => {
+                        const count =
+                          art === 'GESCHWINDIGKEIT'
+                            ? data.geschwindigkeitCount
+                            : art === 'ABSTAND'
+                              ? data.abstandCount
+                              : data.rotlichtCount
+                        const Icon = cfg.Icon
+                        return (
+                          <li key={art}>
+                            <Link
+                              href={cfg.href}
+                              className="flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition-colors duration-150 group cursor-pointer"
+                            >
+                              <span className={`w-8 h-8 ${cfg.iconBg} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                                <Icon className={`w-4 h-4 ${cfg.iconColor}`} />
+                              </span>
+                              <div className="flex-1 min-w-0">
+                                <div className="text-sm font-semibold text-slate-800 group-hover:text-indigo-700 transition-colors duration-150">
+                                  {VERSTOSS_LABELS[art]}
+                                </div>
+                                <div className="text-xs text-slate-400">{cfg.sub}</div>
+                              </div>
+                              <span className="text-sm font-bold text-slate-700 tabular-nums flex-shrink-0">
+                                {count.toLocaleString('de-DE')}
+                              </span>
+                            </Link>
+                          </li>
+                        )
+                      },
+                    )}
+                  </ul>
+                </div>
+              </nav>
 
-            <div className="mt-6 sm:hidden">
-              <Link
-                href="/messstellen"
-                className="flex items-center justify-center gap-1.5 text-sm text-indigo-600 font-semibold hover:text-indigo-800 transition-colors duration-200 cursor-pointer"
-              >
-                Alle Messstellen <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ── BUNDESLAND GRID ─────────────────────────────────────────── */}
-      {data.bundeslaenderStats.length > 0 && (
-        <section className="bg-slate-50" aria-labelledby="bundeslaender-heading">
-          <div className="container-gov py-12">
-            <div className="mb-8">
-              <h2 id="bundeslaender-heading" className="text-xl font-black text-slate-900 tracking-tight">
-                Nach Bundesland
-              </h2>
-              <p className="text-slate-500 text-sm mt-1">Messstellen nach Region</p>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5">
-              {data.bundeslaenderStats.map((bl) => (
-                <Link
-                  key={bl.bundesland}
-                  href={`/messstellen/${encodeURIComponent(bl.bundesland.toLowerCase().replace(/\s/g, '-'))}`}
-                  className="group bg-white border border-slate-200 hover:border-indigo-300 hover:shadow-sm rounded-xl px-3 py-3 flex items-center gap-2.5 transition-all duration-200 cursor-pointer"
-                >
-                  <span className="w-8 h-6 bg-indigo-600 text-white text-[10px] font-black flex items-center justify-center rounded-md flex-shrink-0 group-hover:bg-indigo-700 transition-colors duration-200">
-                    {BUNDESLAND_KUERZEL[bl.bundesland] || bl.bundesland.slice(0, 2).toUpperCase()}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <div className="text-xs font-semibold text-slate-800 truncate group-hover:text-indigo-700 transition-colors duration-200">
-                      {bl.bundesland}
+              {/* Bundesland panel */}
+              {data.bundeslaenderStats.length > 0 && (
+                <nav aria-labelledby="bundeslaender-heading">
+                  <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
+                    <div className="px-4 py-3 border-b border-slate-100">
+                      <h2 id="bundeslaender-heading" className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                        Nach Bundesland
+                      </h2>
                     </div>
-                    <div className="text-[10px] text-slate-400 font-medium">{bl._count.id} Stellen</div>
+                    <ul role="list" className="divide-y divide-slate-100">
+                      {data.bundeslaenderStats.map((bl) => (
+                        <li key={bl.bundesland}>
+                          <Link
+                            href={`/messstellen/${encodeURIComponent(bl.bundesland.toLowerCase().replace(/\s/g, '-'))}`}
+                            className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 transition-colors duration-150 group cursor-pointer"
+                          >
+                            <span className="w-8 h-5 bg-slate-800 text-white text-[9px] font-black flex items-center justify-center rounded flex-shrink-0 group-hover:bg-indigo-600 transition-colors duration-150">
+                              {BUNDESLAND_KUERZEL[bl.bundesland] || bl.bundesland.slice(0, 2).toUpperCase()}
+                            </span>
+                            <span className="flex-1 text-sm text-slate-700 group-hover:text-indigo-700 transition-colors duration-150 truncate">
+                              {bl.bundesland}
+                            </span>
+                            <span className="text-xs font-semibold text-slate-400 tabular-nums flex-shrink-0">
+                              {bl._count.id}
+                            </span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="px-4 py-3 border-t border-slate-100">
+                      <Link
+                        href="/bussgeldbehoerden"
+                        className="flex items-center gap-2 text-xs text-indigo-600 font-semibold hover:text-indigo-800 transition-colors duration-200 cursor-pointer"
+                      >
+                        <Building2 className="w-3.5 h-3.5" />
+                        Bußgeldbehörden anzeigen
+                        <ArrowRight className="w-3 h-3 ml-auto" />
+                      </Link>
+                    </div>
                   </div>
-                </Link>
-              ))}
+                </nav>
+              )}
             </div>
 
-            {/* CTA strip */}
-            <div className="mt-8 bg-indigo-600 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-indigo-500 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <Zap className="w-5 h-5 text-white" fill="currentColor" />
-                </div>
-                <div>
-                  <div className="text-white font-bold text-sm">Geblitzt worden?</div>
-                  <div className="text-indigo-200 text-xs">
-                    Finden Sie die zuständige Bußgeldbehörde und Ihre Einspruchsmöglichkeiten.
-                  </div>
-                </div>
-              </div>
-              <Link
-                href="/bussgeldbehoerden"
-                className="flex-shrink-0 inline-flex items-center gap-1.5 bg-white text-indigo-700 text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-indigo-50 transition-colors duration-200 cursor-pointer"
-              >
-                Bußgeldbehörden
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </div>
-        </section>
-      )}
+            {/* ── RIGHT COLUMN: recent entries ───────────────────────── */}
+            <div className="lg:col-span-2">
+              {data.neueMessstellen.length > 0 ? (
+                <section aria-labelledby="recent-heading">
+                  <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
+                    <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
+                      <h2 id="recent-heading" className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                        Zuletzt eingetragen
+                      </h2>
+                      <Link
+                        href="/messstellen"
+                        className="text-xs text-indigo-600 font-semibold hover:text-indigo-800 transition-colors duration-200 cursor-pointer"
+                      >
+                        Alle anzeigen →
+                      </Link>
+                    </div>
 
-      {/* Empty state */}
-      {data.totalMessstellen === 0 && (
-        <section className="container-gov py-24 text-center">
-          <div className="w-16 h-16 bg-indigo-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <Building2 className="w-8 h-8 text-indigo-500" />
+                    <ul role="list" className="divide-y divide-slate-100">
+                      {data.neueMessstellen.map((m) => {
+                        const cfg = verstossConfig[m.verstossArt as keyof typeof verstossConfig]
+                        const Icon = cfg.Icon
+                        const href = `/messstellen/${encodeURIComponent(m.bundesland.toLowerCase().replace(/\s/g, '-'))}/${m.slug}`
+                        return (
+                          <li key={m.id}>
+                            <Link
+                              href={href}
+                              className="flex items-center gap-3 px-4 py-3.5 hover:bg-slate-50 transition-colors duration-150 group cursor-pointer"
+                              itemScope
+                              itemType="https://schema.org/Place"
+                            >
+                              {/* Type icon */}
+                              <span className={`w-8 h-8 ${cfg.iconBg} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                                <Icon className={`w-4 h-4 ${cfg.iconColor}`} />
+                              </span>
+
+                              {/* Title + location */}
+                              <div className="flex-1 min-w-0">
+                                <div
+                                  className="text-sm font-semibold text-slate-800 group-hover:text-indigo-700 transition-colors duration-150 truncate"
+                                  itemProp="name"
+                                >
+                                  {m.titel}
+                                </div>
+                                <div className="flex items-center gap-2 mt-0.5">
+                                  <span className="text-xs text-slate-400 flex items-center gap-1">
+                                    <MapPin className="w-3 h-3 flex-shrink-0" />
+                                    {m.bundesland}{m.ort && ` · ${m.ort}`}
+                                  </span>
+                                </div>
+                              </div>
+
+                              {/* Badges */}
+                              <div className="flex items-center gap-2 flex-shrink-0">
+                                {m.autobahn && (
+                                  <span className="text-[11px] bg-slate-800 text-white px-1.5 py-0.5 rounded font-mono font-bold">
+                                    {m.autobahn}
+                                  </span>
+                                )}
+                                <span className={`hidden sm:inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full font-medium ${cfg.badge}`}>
+                                  <Icon className="w-2.5 h-2.5" />
+                                  {VERSTOSS_LABELS[m.verstossArt as keyof typeof VERSTOSS_LABELS]}
+                                </span>
+                              </div>
+
+                              <ArrowRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-indigo-400 transition-colors duration-150 flex-shrink-0" />
+                            </Link>
+                          </li>
+                        )
+                      })}
+                    </ul>
+
+                    <div className="px-4 py-3 border-t border-slate-100 bg-slate-50">
+                      <Link
+                        href="/messstellen"
+                        className="flex items-center justify-center gap-1.5 text-sm text-indigo-600 font-semibold hover:text-indigo-800 transition-colors duration-200 cursor-pointer"
+                      >
+                        Alle {data.totalMessstellen} Messstellen anzeigen
+                        <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    </div>
+                  </div>
+                </section>
+              ) : (
+                <div className="bg-white border border-slate-200 rounded-xl p-12 text-center">
+                  <Building2 className="w-8 h-8 text-slate-300 mx-auto mb-3" />
+                  <p className="text-slate-500 text-sm">Noch keine Messstellen eingetragen.</p>
+                </div>
+              )}
+            </div>
+
           </div>
-          <h2 className="text-xl font-black text-slate-900 mb-2">Noch keine Daten</h2>
-          <p className="text-slate-500 text-sm">Noch keine Messstellen eingetragen.</p>
-        </section>
-      )}
+        </div>
+      </div>
     </>
   )
 }
