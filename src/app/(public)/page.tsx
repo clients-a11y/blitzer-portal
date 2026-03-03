@@ -116,14 +116,14 @@ export default async function HomePage() {
           <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-indigo-500/10 rounded-full blur-2xl translate-y-1/2" />
         </div>
 
-        <div className="relative container-gov pt-16 pb-14 md:pt-20 md:pb-18">
+        <div className="relative container-gov pt-20 pb-16 md:pt-24 md:pb-20">
           {/* Eyebrow pill */}
           <div className="inline-flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/30 rounded-full px-4 py-1.5 text-xs font-semibold text-indigo-300 mb-6">
             <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
             {data.totalMessstellen} Messstellen in {data.bundeslaenderStats.length} Bundesländern
           </div>
 
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight mb-5 leading-[1.1]">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight mb-5 leading-tight">
             Alle Blitzer-<br />
             <span className="bg-gradient-to-r from-indigo-400 to-indigo-200 bg-clip-text text-transparent">
               Messstellen Deutschlands
@@ -158,16 +158,16 @@ export default async function HomePage() {
               { value: data.totalMessstellen, label: 'Messstellen', color: 'text-indigo-400' },
               { value: data.bundeslaenderStats.length, label: 'Bundesländer', color: 'text-indigo-400' },
               { value: data.totalBehoerden, label: 'Behörden', color: 'text-indigo-400' },
-              { value: data.geschwindigkeitCount + data.abstandCount + data.rotlichtCount, label: 'Verstöße erfasst', color: 'text-indigo-400' },
+              { value: data.geschwindigkeitCount + data.abstandCount + data.rotlichtCount, label: 'Verstöße', color: 'text-indigo-400' },
             ].map(({ value, label, color }) => (
               <div
                 key={label}
-                className="bg-white/5 border border-white/10 rounded-xl px-4 py-3"
+                className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 min-w-0"
               >
                 <div className={`text-2xl font-black leading-none ${color}`}>
                   {value.toLocaleString('de-DE')}
                 </div>
-                <div className="text-xs text-slate-500 mt-1 font-medium">{label}</div>
+                <div className="text-xs text-slate-500 mt-1 font-medium truncate">{label}</div>
               </div>
             ))}
           </div>

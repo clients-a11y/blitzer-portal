@@ -148,7 +148,7 @@ export default async function MessstelleDetailPage({ params }: Props) {
       <div className="min-h-screen bg-slate-50">
         {/* ── DARK HERO BANNER ────────────────────────────────────── */}
         <div className={`bg-slate-950 bg-gradient-to-br ${cfg.heroBg} to-transparent`}>
-          <div className="container-gov pt-6 pb-8">
+          <div className="container-gov pt-8 pb-8">
             <Breadcrumb
               items={[
                 { label: 'Startseite', href: '/' },

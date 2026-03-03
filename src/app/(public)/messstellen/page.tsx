@@ -74,7 +74,7 @@ export default async function MessstellenPage({ searchParams }: Props) {
     <div className="min-h-screen bg-slate-50">
       {/* Page header */}
       <div className="bg-white border-b border-slate-200">
-        <div className="container-gov py-6">
+        <div className="container-gov py-8">
           <Breadcrumb items={[{ label: 'Startseite', href: '/' }, { label: 'Messstellen' }]} />
           <div className="mt-3 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
             <div>

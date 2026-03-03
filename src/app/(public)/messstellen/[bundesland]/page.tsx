@@ -71,7 +71,7 @@ export default async function BundeslandPage({ params }: Props) {
     <div className="min-h-screen bg-slate-50">
       {/* Hero strip */}
       <div className="bg-slate-950">
-        <div className="container-gov pt-6 pb-8">
+        <div className="container-gov pt-8 pb-8">
           <Breadcrumb
             items={[
               { label: 'Startseite', href: '/' },
